@@ -1,0 +1,40 @@
+{
+    "name": "sysoce/laravel-translation",
+    "description": "Provides a translation dictionary cache layer between a translation service and your Laravel application.",
+    "keywords": [
+        "sysoce",
+        "laravel",
+        "translation",
+        "auto",
+        "machine",
+        "dictionary",
+        "cache"
+    ],
+    "type": "library",
+    "homepage": "https://github.com/sysoce/laravel-translation",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sysoce",
+            "email": "sysoce@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "php": ">=7.0",
+        "spatie/laravel-model-status": "^1.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sysoce\\Translation\\": "src"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sysoce\\Translation\\TranslationServiceProvider"
+            ]
+        }
+    }
+}

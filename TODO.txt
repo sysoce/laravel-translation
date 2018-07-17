@@ -1,0 +1,14 @@
+TODO:
+
+Rename to laravel-translation-dictionary, update all classes and migrations
+
+
+
+NOTE:
+test
+
+Example:
+$result = app('Sysoce\Translation\Contracts\Translator')->translate($input, [
+    'source' => 'en',
+    'target' => 'ja',
+]);
