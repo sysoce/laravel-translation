@@ -22,6 +22,20 @@ namespace Sysoce\Translation\Contracts;
 interface Client
 {
     /**
+     * Returns the source language code.
+     *
+     * @return string
+     */
+    public function getSource();
+
+    /**
+     * Returns the target language code.
+     *
+     * @return string
+     */
+    public function getTarget();
+
+    /**
      * Set source language.
      *
      * @param string $source Language code

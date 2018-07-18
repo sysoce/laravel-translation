@@ -62,15 +62,13 @@ class TranslationServiceProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'translation');
 
-         $this->app->bind(TranslatorContract::class, $this->app->config['translation.translator']);
+         $this->app->bind(TranslatorContract::class, $this->app->config['translation.clients.client']);
 
         $this->app->singleton(TranslatorContract::class, function ($app) {
-            return new new $this->app->config['translation.translator'](
-                $this->app->config['translation.translator_arguments']
-            );
+            return new new $this->app->config['translation.clients.client']();
         });
 
-        $this->app->bind(TranslatorContract::class, $this->app->config['translation.translator']);
+        $this->app->bind(TranslatorContract::class, $this->app->config['translation.clients.client']);
 
         $this->app->bind(TranslationContract::class, $this->app->config['translation.translation']);
     }

@@ -32,15 +32,52 @@ trait HasHashIdTrait
     {
         $string = '';
         static::creating(function ($model) {
-            if(empty($this->hashableAttributes)) {
-                $string = implode($model->attributes);
-            } else {
-                foreach ($this->hashableAttributes as $value) {
-                    $string .= $model->attributes[$value];
-                }
-            }
-            $model->attributes['hash_id'] = self::hash($string);
+            $model->attributes['hash_id'] = $model->hash($model->getHashableString($model->attributes));
         });
+    }
+
+    /**
+     * Get the first record matching the attributes or create it.
+     *
+     * @param  array  $attributes
+     * @param  array  $values
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public static function firstOrCreate(array $attributes, array $values = [])
+    {
+        try {
+            $static = (new static);
+            if(empty($attributes['hash_id']) && !empty($attributes['locale']) && !empty($attributes['text'])) {
+                $attributes['hash_id'] = $static->hash($static->getHashableString($attributes));
+            }
+            $model = $static->where($attributes['hash_id'])->first();
+            if($model) return $model;
+            return $static->create($attributes + $values);
+        } catch (QueryException $e){
+            if($e->errorInfo[0] === "23000" && $e->errorInfo[1] === 1062) {
+                // handle race condition
+                return $static->where($attributes)->first();
+            } else {
+                throw $e;
+            }
+        }
+    }
+
+    /**
+     * Get a hashable string from a set of attributes.
+     *
+     * @param  string  $string
+     * @return string
+     */
+    public static function getHashableString($attributes)
+    {
+        $string = null;
+        if(!empty($this->hashableAttributes)) {
+            foreach ($this->hashableAttributes as $value) {
+                $string .= $attributes[$value];
+            }
+        }
+        return $string;
     }
 
     /**

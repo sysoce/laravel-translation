@@ -1,14 +1,13 @@
 {
     "name": "sysoce/laravel-translation",
-    "description": "Provides a translation dictionary cache layer between a translation service and your Laravel application.",
+    "description": "Provides a translation dictionary layer between a translation service and your Laravel application.",
     "keywords": [
         "sysoce",
         "laravel",
         "translation",
         "auto",
         "machine",
-        "dictionary",
-        "cache"
+        "dictionary"
     ],
     "type": "library",
     "homepage": "https://github.com/sysoce/laravel-translation",

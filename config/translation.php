@@ -14,30 +14,72 @@
 return [
 
     /*
-     * The translator to be used for translations
-     * The model used have to implement Sysoce\Translation\Contracts\Translator
-     */
-    'translator' => \Google\Cloud\Translate\TranslateClient::class,
+    |--------------------------------------------------------------------------
+    | Models
+    |--------------------------------------------------------------------------
+    |
+    |  The models to use for storing locales, and translations.
+    |
+    */
 
-    /*
-     * The translate client to be used for translations
-     */
-    'translator_arguments' => [
-        /*
-         * Google Cloud Project ID
-         */
-        'project_id' => '',
+    'models' => [
 
         /*
-         * Google Cloud Translation API Key
-         */
-        'api_key' => ''
+        |--------------------------------------------------------------------------
+        | Translation Model
+        |--------------------------------------------------------------------------
+        |
+        |  The translation model is used for storing translations.
+        |
+        */
+
+        'translation' => Sysoce\Translation\Models\Translation::class,
+
     ],
 
     /*
-     * The translation model to be used by the package.
-     * The model used have to implement Sysoce\Translation\Contracts\Translation
-     */
-    'translator' => \\Cloud\Translate\TranslateClient::class,
+    |--------------------------------------------------------------------------
+    | Clients
+    |--------------------------------------------------------------------------
+    |
+    |  The services providing translation.
+    */
+
+    'clients' => [
+
+        /*
+        |--------------------------------------------------------------------------
+        | Translation client
+        |--------------------------------------------------------------------------
+        |
+        |  The translation client providing translation service, must implement
+        |  Sysoce\Translation\Contracts\Client.
+        |
+        */
+
+        'client' => Sysoce\Translation\Clients\GoogleCloudTranslate::class,
+
+        /*
+        |--------------------------------------------------------------------------
+        | Client Arguments
+        |--------------------------------------------------------------------------
+        |
+        |  If the client requires any configuration values, modify the array below.
+        |
+        */
+
+        'config' => [
+
+            /*
+             * If the client requires a project id, enter below.
+             */
+            'project_id' => env('TRANSLATE_PROJECT_ID'),
+
+            /*
+             * If the client requires an API key, enter below.
+             */
+            'api_key' => env('TRANSLATE_API_KEY'),
+        ],
+    ],
 
 ];

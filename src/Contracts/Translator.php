@@ -11,13 +11,14 @@
  * @see https://github.com/sysoce/laravel-translation
  */
 
-namespace Sysoce\Translation\Http\Controllers;
+namespace Sysoce\Translation\Contracts;
 
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Routing\Controller as BaseController;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-
-abstract class Controller extends BaseController
+interface Translator extends Client
 {
-    use DispatchesJobs, ValidatesRequests;
+    /**
+     * Constructor.
+     *
+     * @param Application $app
+     */
+    public function __construct(Client $client);
 }
