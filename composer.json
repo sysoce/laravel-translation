@@ -35,5 +35,8 @@
                 "Sysoce\\Translation\\TranslationServiceProvider"
             ]
         }
+    },
+    "require-dev": {
+        "orchestra/testbench": "~3.5"
     }
 }

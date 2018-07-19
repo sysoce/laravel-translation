@@ -1,23 +1,12 @@
 <?php
 
-/*
- * This file is part of the sysoce/laravel-translation package.
- *
- * (c) Sysoce <sysoce@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * @see https://github.com/sysoce/laravel-translation
- */
-
-namespace Sysoce\Translation\Models;
+namespace Sysoce\Translation\Test;
 
 use Illuminate\Database\Eloquent\Model;
 use Sysoce\Translation\Traits\TranslationTrait;
 use Sysoce\Translation\Traits\HasHashIdTrait;
 
-class Translation extends Model
+class TestModel extends Model
 {
     use TranslationTrait, HasHashIdTrait;
 
@@ -35,5 +24,10 @@ class Translation extends Model
      */
     protected $fillable = ['source_id', 'locale', 'text'];
 
-
+    /**
+     * The hashable attributes to use to create a unique hash id.
+     *
+     * @var array
+     */
+    public $hashableAttributes = ['locale', 'text'];
 }
