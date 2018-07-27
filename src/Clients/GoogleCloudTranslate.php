@@ -4,6 +4,7 @@ namespace Sysoce\Translation\Clients;
 
 use Sysoce\Translation\Contracts\Client;
 use Google\Cloud\Translate\TranslateClient;
+use Illuminate\Foundation\Application;
 
 class GoogleCloudTranslate implements Client
 {

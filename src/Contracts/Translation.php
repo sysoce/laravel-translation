@@ -13,12 +13,19 @@
 
 namespace Sysoce\Translation\Contracts;
 
-interface Translator extends Client
+interface Translation
 {
     /**
-     * Constructor.
+     * The belongsTo translation relationship.
      *
-     * @param Application $app
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function __construct(Client $client);
+    public function source();
+
+    /**
+     * The hasMany translations relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function translations();
 }

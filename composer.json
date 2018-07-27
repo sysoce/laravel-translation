@@ -21,12 +21,24 @@
     "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
-        "php": ">=7.0"
+        "php": ">=7.0",
+        "google/cloud-translate": "^1.2"
     },
     "autoload": {
         "psr-4": {
             "Sysoce\\Translation\\": "src"
         }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "database/migrations"
+        ],
+        "psr-4": {
+            "Sysoce\\Translation\\Test\\": "tests"
+        }
+    },
+    "config": {
+        "sort-packages": true
     },
     "extra": {
         "laravel": {
@@ -36,6 +48,8 @@
         }
     },
     "require-dev": {
-        "orchestra/testbench": "~3.5"
+        "fzaninotto/faker": "^1.8",
+        "orchestra/testbench": "~3.5",
+        "phpunit/phpunit": "^7.2"
     }
 }

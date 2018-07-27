@@ -14,8 +14,9 @@
 namespace Sysoce\Translation;
 
 use Illuminate\Support\ServiceProvider;
-use App\Contracts\Translator as TranslatorContract;
-use App\Contracts\Translation as TranslationContract;
+use Sysoce\Translation\Contracts\Client as ClientContract;
+use Sysoce\Translation\Contracts\Translation as TranslationContract;
+use Sysoce\Translation\Translation;
 
 class TranslationServiceProvider extends ServiceProvider
 {
@@ -60,16 +61,18 @@ class TranslationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'translation');
+        $this->mergeConfigFrom(__DIR__.'/../config/translation.php', 'translation');
 
-         $this->app->bind(TranslatorContract::class, $this->app->config['translation.clients.client']);
+        $this->app->bind(ClientContract::class, $this->app->config['translation.clients.client']);
 
-        $this->app->singleton(TranslatorContract::class, function ($app) {
-            return new new $this->app->config['translation.clients.client']();
+        // $this->app->singleton(ClientContract::class, function ($app) {
+        //     return new $this->app->config['translation.clients.client']();
+        // });
+
+        $this->app->bind(TranslationContract::class, $this->app->config['translation.models.translation']);
+
+        $this->app->singleton(Translation::class, function ($app) {
+            return new Translation(new $this->app->config['translation.clients.client']($app));
         });
-
-        $this->app->bind(TranslatorContract::class, $this->app->config['translation.clients.client']);
-
-        $this->app->bind(TranslationContract::class, $this->app->config['translation.translation']);
     }
 }

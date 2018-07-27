@@ -14,9 +14,10 @@
 namespace Sysoce\Translation;
 
 use Sysoce\Translation\Contracts\Client;
-use Sysoce\Translation\Models\Translation;
+// use Sysoce\Translation\Clients\GoogleCloudTranslate as Client;
+use Sysoce\Translation\Models\Translation as Model;
 
-class Translator
+class Translation
 {
     /**
      * Holds the translation client.
@@ -73,11 +74,11 @@ class Translator
      */
     public function translate($text)
     {
-        $source = Translation::firstOrCreate(['locale' => $this->getSource(), 'text' => $text]);
+        $source = Model::firstOrCreate(['locale' => $this->getSource(), 'text' => $text]);
 
         $translation = $source->translations()->where('locale', $this->getTarget())->first();
         if(!$translation) {
-            $translation = Translation::create([
+            $translation = Model::create([
                 'source_id' => $source->id,
                 'locale' => $this->getTarget(),
                 'text' => $this->client->translate($text)

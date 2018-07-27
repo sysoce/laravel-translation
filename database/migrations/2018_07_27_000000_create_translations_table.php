@@ -1,10 +1,11 @@
 <?php
 
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTranslationsTable extends Migration {
-
+class CreateTranslationsTable extends Migration
+{
 	/**
 	 * Run the migrations.
 	 *
@@ -15,6 +16,7 @@ class CreateTranslationsTable extends Migration {
         Schema::create('translations', function(Blueprint $table)
         {
             $table->increments('id');
+            $table->char('hash_id', 32);
             $table->integer('source_id')->unsigned()->nullable();
             $table->foreign('source_id')
             	  ->references('id')
@@ -27,7 +29,7 @@ class CreateTranslationsTable extends Migration {
             $table->softDeletes();
         });
 
-        DB::statement('ALTER TABLE translations ADD COLUMN hash_id BINARY(16) NOT NULL UNIQUE AFTER id');
+        // DB::statement('ALTER TABLE translations ADD COLUMN hash_id BINARY(16) NOT NULL UNIQUE');
 	}
 
 	/**

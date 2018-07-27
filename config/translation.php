@@ -78,7 +78,7 @@ return [
             /*
              * If the client requires an API key, enter below.
              */
-            'api_key' => env('TRANSLATE_API_KEY'),
+            // 'api_key' => env('TRANSLATE_API_KEY'),
         ],
     ],
 

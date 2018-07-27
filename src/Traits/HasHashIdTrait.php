@@ -19,9 +19,9 @@ trait HasHashIdTrait
      * Define which model attributes are hashable.
      * If empty all model attributes will be hashed.
      *
-     * @param array
+     * @param array $hashableAttributes
      */
-    $hashableAttributes = [];
+    // protected $hashableAttributes = [];
 
     /**
      * Define model event callbacks.
@@ -32,7 +32,9 @@ trait HasHashIdTrait
     {
         $string = '';
         static::creating(function ($model) {
-            $model->attributes['hash_id'] = $model->hash($model->getHashableString($model->attributes));
+            $string = $model->getHashableString($model->attributes);
+            $hash = $model->hash($string);
+            $model->attributes['hash_id'] = $hash;
         });
     }
 
@@ -50,7 +52,7 @@ trait HasHashIdTrait
             if(empty($attributes['hash_id']) && !empty($attributes['locale']) && !empty($attributes['text'])) {
                 $attributes['hash_id'] = $static->hash($static->getHashableString($attributes));
             }
-            $model = $static->where($attributes['hash_id'])->first();
+            $model = $static->where('hash_id', $attributes['hash_id'])->first();
             if($model) return $model;
             return $static->create($attributes + $values);
         } catch (QueryException $e){
@@ -69,7 +71,7 @@ trait HasHashIdTrait
      * @param  string  $string
      * @return string
      */
-    public static function getHashableString($attributes)
+    public function getHashableString($attributes)
     {
         $string = null;
         if(!empty($this->hashableAttributes)) {
@@ -88,8 +90,8 @@ trait HasHashIdTrait
      */
     public static function hash($string)
     {
-        // The hash is raw binary format (with a length of 16 bytes for md5).
-        return md5($string, true);
+        // The hash is a string of hex digits (with a length of 32 bytes for md5).
+        return md5($string);
     }
 
 }

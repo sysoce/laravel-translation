@@ -30,4 +30,22 @@ class TestModel extends Model
      * @var array
      */
     public $hashableAttributes = ['locale', 'text'];
+
+    /**
+     * The belongsTo translation relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function source() {
+        return $this->belongsTo(Translation::class);
+    }
+
+    /**
+     * The hasMany translations relationship.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function translations() {
+        return $this->HasMany(Translation::class);
+    }
 }
