@@ -51,4 +51,24 @@ class TranslationTest extends TestCase
         $model2 = app(Model::class)->firstOrCreate($test_data);
         $this->assertTrue($model1->is($model2));
     }
+
+    /** @test */
+    public function it_serializes()
+    {
+        Model::unguard();
+        $test_data = [
+            "id" => 1,
+            "locale" => $this->faker->locale,
+            "text" => $this->faker->unique()->text,
+            "updated_at" => "2018-07-27 17:14:08",
+            "created_at" => "2018-07-27 17:14:08"
+        ];
+        $model = app(Model::class)->create($test_data);
+        Model::reguard();
+        $model->__toString(); // Should not through error TODO: assert
+        $this->assertJsonStringEqualsJsonString(
+            json_encode($test_data),
+            $model->makeHidden('hash_id')->toJson()
+        );
+    }
 }

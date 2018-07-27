@@ -1,4 +1,8 @@
 TODO:
+Handle fail, throw exception and or return source text
+Better system for
+	hashableAttributes
+
 
 Rename to laravel-translation-dictionary, update all classes and migrations
 
