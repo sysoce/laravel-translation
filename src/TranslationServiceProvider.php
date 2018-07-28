@@ -45,12 +45,12 @@ class TranslationServiceProvider extends ServiceProvider
             ], 'views');
             */
 
-            $this->loadMigrationsFrom(__DIR__.'/database/migrations/2018_07_27_000000_create_translations_table.php');
+            $this->loadMigrationsFrom(__DIR__.'/database/migrations/0000_00_00_000000_create_translations_table.php');
 
             if (! class_exists('CreateTranslationsTable')) {
                 $timestamp = date('Y_m_d_His', time());
                 $this->publishes([
-                    __DIR__.'/../database/migrations/2018_07_27_000000_create_translations_table.php' => database_path('migrations/'.$timestamp.'_create_translations_table.php'),
+                    __DIR__.'/../database/migrations/0000_00_00_000000_create_translations_table.php' => database_path('migrations/'.$timestamp.'_create_translations_table.php'),
                 ], 'migrations');
             }
         }
