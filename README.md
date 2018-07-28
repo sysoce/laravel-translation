@@ -11,7 +11,7 @@ THIS PACKAGE IS IN EARLY DEVELOPMENT
 
 * [Installation](#installation)
 * [Usage](#usage)
-  * [Using the translation dictionary layer](#using--the-translation-dictionary-layer)
+  * [Using the translation dictionary layer](#using-the-translation-dictionary-layer)
 * [Extending](#extending)
 
 This package provides a translation dictionary layer between a translation service and your Laravel application.
@@ -32,8 +32,6 @@ echo $translation->text
 ```
 
 ## Installation
-
-- [Laravel](#laravel)
 
 ### Laravel
 
@@ -72,7 +70,7 @@ You can publish the config file with:
 php artisan vendor:publish --provider="Sysoce\Translation\TranslationServiceProvider" --tag="config"
 ```
 
-When published, [the `config/permission.php` config file](https://github.com/sysoce/laravel-translation/blob/master/config/translation.php) contains:
+When published, [the `config/translation.php` config file](https://github.com/sysoce/laravel-translation/blob/master/config/translation.php) contains:
 
 ```php
 return [
