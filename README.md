@@ -197,10 +197,6 @@ Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recen
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
-### Security
-
-If you discover any security-related issues, please email [sysoce@gmail.com](mailto:sysoce@gmail.com) instead of using the issue tracker.
-
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
