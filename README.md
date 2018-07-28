@@ -1,4 +1,4 @@
-# laravel-translation
+# Laravel Translation
 Provides a translation dictionary layer between a translation service and your Laravel application.
 
 THIS PACKAGE IS IN EARLY DEVELOPMENT
@@ -196,10 +196,6 @@ Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recen
 ## Contributing
 
 Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-### Security
-
-If you discover any security-related issues, please email [sysoce@gmail.com](mailto:sysoce@gmail.com) instead of using the issue tracker.
 
 ## License
 
