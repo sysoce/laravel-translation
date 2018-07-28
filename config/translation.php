@@ -18,7 +18,7 @@ return [
     | Models
     |--------------------------------------------------------------------------
     |
-    |  The models to use for storing locales, and translations.
+    |  The model to use for storing translations.
     |
     */
 
@@ -73,12 +73,12 @@ return [
             /*
              * If the client requires a project id, enter below.
              */
-            // 'project_id' => env('TRANSLATE_PROJECT_ID', ''),
+            // 'projectId' => env('TRANSLATE_PROJECT_ID', ''),
 
             /*
              * If the client requires an API key, enter below.
              */
-            // 'api_key' => env('TRANSLATE_API_KEY', ''),
+            // 'key' => env('TRANSLATE_API_KEY', ''),
         ],
     ],
 
