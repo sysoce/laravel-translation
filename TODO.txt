@@ -1,5 +1,6 @@
 TODO:
 Handle fail, throw exception and or return source text
+SupportedLanguages method in Translation and Client contract
 Better system for
 	hashableAttributes
 
