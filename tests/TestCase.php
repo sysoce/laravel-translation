@@ -46,20 +46,12 @@ abstract class TestCase extends Orchestra
 
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', [
-            'driver' => 'mysql',
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'testbench'),
-            'username' => env('DB_USERNAME', 'testbench'),
-            'password' => env('DB_PASSWORD', 'testbench'),
-            'unix_socket' => env('DB_SOCKET', ''),
-            'charset' => 'utf8mb4',
-            'collation' => 'utf8mb4_unicode_ci',
-            'prefix' => '',
-            'strict' => true,
-            'engine' => null,
+            'driver'   => 'sqlite',
+            'database' => "{$this->getTempDirectory()}/database.sqlite",
+            'prefix'   => '',
         ]);
 
+        // Set config for Translation Client
         // $app['config']->set('translation.clients.config', []);
     }
 
@@ -68,7 +60,7 @@ abstract class TestCase extends Orchestra
      */
     protected function setUpDatabase($app)
     {
-        // file_put_contents($this->getTempDirectory().'/database.sqlite', null);
+        file_put_contents($this->getTempDirectory().'/database.sqlite', null);
 
         // call migrations specific to our tests, e.g. to seed the db
         // the path option should be relative to the 'path.database'

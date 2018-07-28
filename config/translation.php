@@ -73,12 +73,12 @@ return [
             /*
              * If the client requires a project id, enter below.
              */
-            'project_id' => env('TRANSLATE_PROJECT_ID'),
+            // 'project_id' => env('TRANSLATE_PROJECT_ID', ''),
 
             /*
              * If the client requires an API key, enter below.
              */
-            // 'api_key' => env('TRANSLATE_API_KEY'),
+            // 'api_key' => env('TRANSLATE_API_KEY', ''),
         ],
     ],
 

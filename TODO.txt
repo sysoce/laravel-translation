@@ -10,7 +10,8 @@ Rename to laravel-translation-dictionary, update all classes and migrations
 
 
 NOTE:
-test
+run test:
+./vendor/bin/phpunit
 
 Example:
 $result = app('Sysoce\Translation\Contracts\Translator')->translate($input, [
