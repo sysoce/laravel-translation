@@ -78,4 +78,75 @@ class TranslationTest extends TestCase
         $this->assertTrue($translation1->is($translation2));
     }
 
+    /** @test
+     * CAUTION: costs money if fail! ご注意ください。バッツとお金がかかります！
+    **/
+    public function it_uses_dictionary_reversed()
+    {
+        $text = 'Kebab';
+        $expected = 'ケバブ';
+        $source_locale = 'en';
+        $target_locale = 'ja';
+
+        $source_translation = app(Model::class)->create(['locale' => $source_locale, 'text' => $text]);
+        $translation1 = $source_translation->translations()->create([
+            'locale' => $target_locale,
+            'text' => $expected,
+        ]);
+
+        app(Translation::class)->setSource($target_locale);
+        app(Translation::class)->setTarget($source_locale);
+
+        $translation2 = app(Translation::class)->translate($expected);
+        $this->assertTrue($source_translation->is($translation2));
+    }
+
+    // TODO: this assumes translation client leaves translation unchanged if already translated
+    /** @test
+     * CAUTION: costs money if fail! ご注意ください。バッツとお金がかかります！
+    **/
+    public function it_uses_dictionary_if_duplicate()
+    {
+        $text = 'Kebab';
+        $expected = 'ケバブ';
+        $source_locale = 'en';
+        $target_locale = 'ja';
+
+        $source_translation = app(Model::class)->create(['locale' => $source_locale, 'text' => $text]);
+        $translation1 = $source_translation->translations()->create([
+            'locale' => $target_locale,
+            'text' => $expected,
+        ]);
+
+        app(Translation::class)->setSource($source_locale);
+        app(Translation::class)->setTarget($target_locale);
+
+        $translation2 = app(Translation::class)->translate($expected); // note the text is already translated and in the wrong language
+        $this->assertTrue($translation1->is($translation2));
+    }
+
+    // TODO: This should be a client test:
+    /** @test
+     * CAUTION: costs money if fail! ご注意ください。バッツとお金がかかります！
+    **/
+    // public function it_leaves_translation_unchanged_if_already_translated()
+    // {
+    //     $text = 'Kebab';
+    //     $expected = 'ケバブ';
+    //     $source_locale = 'en';
+    //     $target_locale = 'ja';
+
+    //     $source_translation = app(Model::class)->create(['locale' => $source_locale, 'text' => $text]);
+    //     $translation1 = $source_translation->translations()->create([
+    //         'locale' => $target_locale,
+    //         'text' => $expected,
+    //     ]);
+
+    //     app(Translation::class)->setSource($source_locale);
+    //     app(Translation::class)->setTarget($target_locale);
+
+    //     $translation2 = app(Translation::class)->translate($expected); // note the text is already translated and in the wrong language
+    //     $this->assertTrue($translation1->text == $translation2->text);
+    // }
+
 }

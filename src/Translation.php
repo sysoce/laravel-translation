@@ -78,11 +78,18 @@ class Translation
 
         $translation = $source->translations()->where('locale', $this->getTarget())->first();
         if(!$translation) {
-            $translation = Model::create([
-                'source_id' => $source->id,
-                'locale' => $this->getTarget(),
-                'text' => $this->client->translate($text)
-            ]);
+            $translation = $source->source()->where('locale', $this->getTarget())->first();
+            if(!$translation) {
+                $translation = Model::firstOrCreate(
+                    [
+                        'locale' => $this->getTarget(),
+                        'text' => $this->client->translate($text)
+                    ],
+                    [
+                        'source_id' => $source->id
+                    ]
+                );
+            }
         }
 
         return $translation;
