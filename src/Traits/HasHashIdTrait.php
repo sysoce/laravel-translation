@@ -66,6 +66,28 @@ trait HasHashIdTrait
     }
 
     /**
+     * Get the first record matching the attributes or create it.
+     *
+     * @param  array  $attributes
+     * @param  array  $values
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public static function updateOrCreate(array $attributes, array $values = [])
+    {
+        $static = (new static);
+        if(empty($attributes['hash_id']) && !empty($attributes['locale']) && !empty($attributes['text'])) {
+            $attributes['hash_id'] = $static->hash($static->getHashableString($attributes));
+        }
+        $model = $static->where('hash_id', $attributes['hash_id'])->first();
+        if($model) {
+            $model->fill($values);
+            return $model;
+        }
+        return $static->create($attributes + $values);
+
+    }
+
+    /**
      * Get a hashable string from a set of attributes.
      *
      * @param  string  $string

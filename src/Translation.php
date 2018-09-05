@@ -75,7 +75,6 @@ class Translation
     public function translate($text)
     {
         $source = Model::firstOrCreate(['locale' => $this->getSource(), 'text' => $text]);
-
         $translation = $source->translations()->where('locale', $this->getTarget())->first();
         if(!$translation) {
             $translation = $source->source()->where('locale', $this->getTarget())->first();
@@ -92,6 +91,43 @@ class Translation
             }
         }
 
+        return $translation;
+    }
+
+    /**
+     * Set translation by editing or creating the dictionary entries.
+     *
+     * @param  string            $text              Source text
+     * @param  string            $translation       Translation
+     * @return \Illuminate\Http\Response
+     */
+    public function setTranslation($text, $translation)
+    {
+        $source = Model::firstOrCreate(['locale' => $this->getSource(), 'text' => $text]);
+        $translation = Model::updateOrCreate(
+            [
+                'locale' => $this->getTarget(),
+                'text' => $translation
+            ],
+            [
+                'source_id' => $source->id
+            ]
+        );
+    }
+
+    /**
+     * Get translation dictionary entry if it exists.
+     *
+     * @param  string            $text              Source text
+     * @return \Illuminate\Http\Response | null
+     */
+    public function getTranslation($text)
+    {
+        $source = Model::firstOrCreate(['locale' => $this->getSource(), 'text' => $text]);
+        $translation = $source->translations()->where('locale', $this->getTarget())->first();
+        if(!$translation) {
+            $translation = $source->source()->where('locale', $this->getTarget())->first();
+        }
         return $translation;
     }
 }
