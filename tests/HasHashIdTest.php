@@ -39,10 +39,8 @@ class HasHashIdTest extends TestCase
             'locale' => $this->faker->locale,
             'text' => $this->faker->unique()->text
         ];
-        $model1 = app(Model::class)->where('locale', $test_data['locale'])->where('text', $test_data['text'])->first();
-        $this->assertNull($model1);
-        $model2 = app(Model::class)->firstOrCreate($test_data);
-        $this->assertInstanceOf(Model::class, $model2);
+        $model = app(Model::class)->firstOrCreate($test_data);
+        $this->assertInstanceOf(Model::class, $model);
     }
 
     /** @test */
@@ -53,8 +51,30 @@ class HasHashIdTest extends TestCase
             'text' => $this->faker->unique()->text
         ];
         $model1 = app(Model::class)->create($test_data);
-        $this->assertInstanceOf(Model::class, $model1);
         $model2 = app(Model::class)->firstOrCreate($test_data);
+        $this->assertTrue($model1->is($model2));
+    }
+
+    /** @test */
+    public function it_creates_a_model_with_updateOrCreate_if_the_model_does_not_exist()
+    {
+        $test_data = [
+            'locale' => $this->faker->locale,
+            'text' => $this->faker->unique()->text
+        ];
+        $model = app(Model::class)->updateOrCreate($test_data);
+        $this->assertInstanceOf(Model::class, $model);
+    }
+
+    /** @test */
+    public function it_updates_a_model_with_updateOrCreate_if_the_model__exist()
+    {
+        $test_data = [
+            'locale' => $this->faker->locale,
+            'text' => $this->faker->unique()->text
+        ];
+        $model1 = app(Model::class)->create($test_data);
+        $model2 = app(Model::class)->updateOrCreate($test_data);
         $this->assertTrue($model1->is($model2));
     }
 

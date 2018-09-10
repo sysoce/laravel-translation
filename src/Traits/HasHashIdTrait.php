@@ -47,22 +47,19 @@ trait HasHashIdTrait
      */
     public static function firstOrCreate(array $attributes, array $values = [])
     {
-        try {
-            $static = (new static);
-            if(empty($attributes['hash_id']) && !empty($attributes['locale']) && !empty($attributes['text'])) {
-                $attributes['hash_id'] = $static->hash($static->getHashableString($attributes));
-            }
-            $model = $static->where('hash_id', $attributes['hash_id'])->first();
-            if($model) return $model;
-            return $static->create($attributes + $values);
-        } catch (QueryException $e){
-            if($e->errorInfo[0] === "23000" && $e->errorInfo[1] === 1062) {
-                // handle race condition
-                return $static->where($attributes)->first();
-            } else {
-                throw $e;
-            }
+        $static = (new static);
+
+        if(empty($attributes['hash_id']) && !empty($attributes['locale']) && !empty($attributes['text'])) {
+            $attributes['hash_id'] = $static->hash($static->getHashableString($attributes));
+        } else {
+            var_dump($attributes);
+            throw new \InvalidArgumentException("Missing or invalid attributes.");
         }
+
+        if (! is_null($instance = $static->where($attributes)->first())) {
+            return $instance;
+        }
+        return $static->newModelInstance($attributes + $values);
     }
 
     /**
@@ -77,14 +74,11 @@ trait HasHashIdTrait
         $static = (new static);
         if(empty($attributes['hash_id']) && !empty($attributes['locale']) && !empty($attributes['text'])) {
             $attributes['hash_id'] = $static->hash($static->getHashableString($attributes));
-        }
-        $model = $static->where('hash_id', $attributes['hash_id'])->first();
-        if($model) {
-            $model->fill($values);
-            return $model;
-        }
-        return $static->create($attributes + $values);
+        } else throw new \InvalidArgumentException("Missing or invalid attributes.");
 
+        return tap($static->firstOrNew($attributes), function ($instance) use ($values) {
+            $instance->fill($values)->save();
+        });
     }
 
     /**

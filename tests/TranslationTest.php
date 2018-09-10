@@ -149,4 +149,47 @@ class TranslationTest extends TestCase
     //     $this->assertTrue($translation1->text == $translation2->text);
     // }
 
+    public function it_retrieves_translation_from_dictionary()
+    {
+        $text = 'Kebab';
+        $translation_text = 'ケバブ';
+        $source_locale = 'en';
+        $target_locale = 'ja';
+
+        $source_translation = app(Model::class)->create(['locale' => $source_locale, 'text' => $text]);
+        $translation1 = $source_translation->translations()->create([
+            'locale' => $target_locale,
+            'text' => $translation_text,
+        ]);
+
+        app(Translation::class)->setSource($source_locale);
+        app(Translation::class)->setTarget($target_locale);
+
+        $translation2 = app(Translation::class)->getTranslation($text);  // get new translation
+        $this->assertTrue($translation1->is($translation2));
+    }
+
+    public function it_updates_dictionary()
+    {
+        $text = 'Kebab';
+        $translation_text = 'ケバブ';
+        $expected = 'ケバブ123ケバブ!';
+        $source_locale = 'en';
+        $target_locale = 'ja';
+
+        $source_translation = app(Model::class)->create(['locale' => $source_locale, 'text' => $text]);
+        $translation1 = $source_translation->translations()->create([
+            'locale' => $target_locale,
+            'text' => $translation_text,
+        ]);
+
+        app(Translation::class)->setSource($source_locale);
+        app(Translation::class)->setTarget($target_locale);
+
+        app(Translation::class)->getTranslation($text);  // get new translation
+
+        $translation3 = app(Translation::class)->setTranslation($text, $expected);         // set new translation
+        $this->assertEquals($expected, $translation3->text);
+    }
+
 }

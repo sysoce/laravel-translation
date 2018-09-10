@@ -96,27 +96,30 @@ class Translation
 
     /**
      * Set translation by editing or creating the dictionary entries.
+     * Note: Creates the source and translation dictionary entries if they don't exist.
      *
      * @param  string            $text              Source text
-     * @param  string            $translation       Translation
+     * @param  string            $translation_text       Translation
      * @return \Illuminate\Http\Response
      */
-    public function setTranslation($text, $translation)
+    public function setTranslation($text, $translation_text)
     {
         $source = Model::firstOrCreate(['locale' => $this->getSource(), 'text' => $text]);
         $translation = Model::updateOrCreate(
             [
                 'locale' => $this->getTarget(),
-                'text' => $translation
+                'text' => $translation_text
             ],
             [
                 'source_id' => $source->id
             ]
         );
+        return $translation;
     }
 
     /**
      * Get translation dictionary entry if it exists.
+     * Note: Creates a source dictionary entry if it doesn't exists.
      *
      * @param  string            $text              Source text
      * @return \Illuminate\Http\Response | null
