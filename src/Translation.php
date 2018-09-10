@@ -111,6 +111,7 @@ class Translation
                 'text' => $translation_text
             ],
             [
+                'text' => $translation_text,
                 'source_id' => $source->id
             ]
         );
