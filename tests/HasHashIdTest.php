@@ -69,13 +69,20 @@ class HasHashIdTest extends TestCase
     /** @test */
     public function it_updates_a_model_with_updateOrCreate_if_the_model__exist()
     {
+        $locale = $this->faker->locale;
         $test_data = [
-            'locale' => $this->faker->locale,
+            'locale' => $locale,
             'text' => $this->faker->unique()->text
         ];
+
         $model1 = app(Model::class)->create($test_data);
-        $model2 = app(Model::class)->updateOrCreate($test_data);
+        $values = [
+            'text' => $this->faker->unique()->text
+        ];
+        $model2 = app(Model::class)->updateOrCreate($test_data, $values);
+
         $this->assertTrue($model1->is($model2));
+        $this->assertEquals($model2->text, $values['text']);
     }
 
     /** @test */

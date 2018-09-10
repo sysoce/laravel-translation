@@ -108,11 +108,10 @@ class Translation
         $translation = Model::updateOrCreate(
             [
                 'locale' => $this->getTarget(),
-                'text' => $translation_text
+                'source_id' => $source->id
             ],
             [
-                'text' => $translation_text,
-                'source_id' => $source->id
+                'text' => $translation_text
             ]
         );
         return $translation;

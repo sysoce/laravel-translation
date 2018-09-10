@@ -51,9 +51,6 @@ trait HasHashIdTrait
 
         if(empty($attributes['hash_id']) && !empty($attributes['locale']) && !empty($attributes['text'])) {
             $attributes['hash_id'] = $static->hash($static->getHashableString($attributes));
-        } else {
-            var_dump($attributes);
-            throw new \InvalidArgumentException("Missing or invalid attributes.");
         }
 
         if (! is_null($instance = $static->where($attributes)->first())) {
@@ -74,7 +71,7 @@ trait HasHashIdTrait
         $static = (new static);
         if(empty($attributes['hash_id']) && !empty($attributes['locale']) && !empty($attributes['text'])) {
             $attributes['hash_id'] = $static->hash($static->getHashableString($attributes));
-        } else throw new \InvalidArgumentException("Missing or invalid attributes.");
+        }
 
         return tap($static->firstOrNew($attributes), function ($instance) use ($values) {
             $instance->fill($values)->save();

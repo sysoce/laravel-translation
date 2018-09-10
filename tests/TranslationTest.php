@@ -125,10 +125,10 @@ class TranslationTest extends TestCase
         $this->assertTrue($translation1->is($translation2));
     }
 
-    // TODO: This should be a client test:
-    /** @test
-     * CAUTION: costs money if fail! ご注意ください。バッツとお金がかかります！
-    **/
+    // // TODO: This should be a client test:
+    // /** @test
+    //  * CAUTION: costs money if fail! ご注意ください。バッツとお金がかかります！
+    // **/
     // public function it_leaves_translation_unchanged_if_already_translated()
     // {
     //     $text = 'Kebab';
@@ -149,6 +149,7 @@ class TranslationTest extends TestCase
     //     $this->assertTrue($translation1->text == $translation2->text);
     // }
 
+    /** @test */
     public function it_retrieves_translation_from_dictionary()
     {
         $text = 'Kebab';
@@ -169,6 +170,7 @@ class TranslationTest extends TestCase
         $this->assertTrue($translation1->is($translation2));
     }
 
+    /** @test */
     public function it_updates_dictionary()
     {
         $text = 'Kebab';
@@ -186,10 +188,10 @@ class TranslationTest extends TestCase
         app(Translation::class)->setSource($source_locale);
         app(Translation::class)->setTarget($target_locale);
 
-        app(Translation::class)->getTranslation($text);  // get new translation
-
-        $translation3 = app(Translation::class)->setTranslation($text, $expected);         // set new translation
-        $this->assertEquals($expected, $translation3->text);
+        $translation2 = app(Translation::class)->setTranslation($text, $expected);         // set new translation
+        // $this->assertEquals($translation1->id, $translation2->id);
+        $this->assertTrue($translation1->is($translation2));
+        $this->assertEquals($expected, $translation2->text);
     }
 
 }
