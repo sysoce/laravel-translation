@@ -103,11 +103,7 @@ following things in mind:
 
 - Your `Translation` model needs to implement the `Sysoce\Translation\Traits\HasHashIdTrait` and `Sysoce\Translation\Traits\TranslationTrait` traits
 
-Whether extending or replacing, you will need to specify your new model in the configuration. To do this you must update the `models.translation` value in the configuration file after publishing the configuration with this command:
-
-```bash
-php artisan vendor:publish --provider="Sysoce\Translation\TranslationServiceProvider" --tag="config"
-```
+Whether extending or replacing, you will need to specify your new model in the configuration. To do this you must update the `models.translation` value in the configuration file after publishing the configuration.
 
 ### Testing
 
