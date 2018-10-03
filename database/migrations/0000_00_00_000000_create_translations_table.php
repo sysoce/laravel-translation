@@ -13,23 +13,20 @@ class CreateTranslationsTable extends Migration
 	 */
 	public function up()
 	{
-        Schema::create('translations', function(Blueprint $table)
-        {
-            $table->increments('id');
-            $table->char('hash_id', 32)->unique();
-            $table->integer('source_id')->unsigned()->nullable();
-            $table->foreign('source_id')
-            	  ->references('id')
-	              ->on('translations')
-	              ->onUpdate('restrict')
-	              ->onDelete('cascade');
-            $table->string('locale');
-            $table->text('text');
-            $table->timestamps();
-            $table->softDeletes();
-        });
-
-        // DB::statement('ALTER TABLE translations ADD COLUMN hash_id BINARY(16) NOT NULL UNIQUE');
+		Schema::create('translations', function(Blueprint $table) {
+		    $table->increments('id');
+		    $table->char('hash_id', 32)->unique();
+		    $table->integer('source_id')->unsigned()->nullable();
+		    $table->foreign('source_id')
+			  ->references('id')
+			      ->on('translations')
+			      ->onUpdate('restrict')
+			      ->onDelete('cascade');
+		    $table->string('locale');
+		    $table->text('text');
+		    $table->timestamps();
+		    $table->softDeletes();
+		});
 	}
 
 	/**
@@ -39,7 +36,7 @@ class CreateTranslationsTable extends Migration
 	 */
 	public function down()
 	{
-        Schema::drop('translations');
+		Schema::drop('translations');
 	}
 
 }
