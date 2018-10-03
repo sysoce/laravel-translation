@@ -72,7 +72,7 @@ Enter the path to your JSON key file obtained from the [Google Cloud Console](ht
 ```
 
 
-You can create a wrapper for other Translation services by implementing the [´Sysoce\Translation\Contracts\Client´](https://github.com/sysoce/laravel-translation/blob/master/src/Contracts/Client.php) contract.
+You can create a wrapper for other Translation services by implementing the [Sysoce\Translation\Contracts\Client](https://github.com/sysoce/laravel-translation/blob/master/src/Contracts/Client.php) contract.
 
 
 ### Using the translation dictionary layer
