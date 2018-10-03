@@ -44,7 +44,7 @@ You can publish [the migration](https://github.com/sysoce/laravel-translation/bl
 php artisan vendor:publish --provider="Sysoce\Translation\TranslationServiceProvider" --tag="migrations"
 ```
 
-After the migration has been published you can create the translations tables by running the migrations:
+After the migration has been published you can create the translations table by running the migration:
 
 ```bash
 php artisan migrate
@@ -59,7 +59,7 @@ php artisan vendor:publish --provider="Sysoce\Translation\TranslationServiceProv
 ## Usage
 
 ### The Client
-To use this package you need to connect to a translation service. This package provides a wrapper for Google Cloud Translate out of the box. To use this translation client you need to install the Google Cloud Translate package:
+To use this package you need to connect to a translation service. This package provides a wrapper for [Google Cloud Translate](https://cloud.google.com/translate/) out of the box. To use this translation client you need to install the Google Cloud Translate package:
 ``` bash
 composer require google/cloud-translate
 ```
