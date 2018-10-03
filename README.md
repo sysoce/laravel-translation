@@ -9,8 +9,12 @@ This package provides a translation dictionary layer between a translation servi
 
 * [Installation](#installation)
 * [Usage](#usage)
+  * [The Client](#the-client)
   * [Using the translation dictionary layer](#using-the-translation-dictionary-layer)
 * [Extending](#extending)
+* [Testing](#testing)
+* [Contributing](#contributing)
+* [License](#license)
 
 
 ## Installation
@@ -110,10 +114,6 @@ php artisan vendor:publish --provider="Sysoce\Translation\TranslationServiceProv
 ``` bash
 ./vendor/bin/phpunit
 ```
-
-### Changelog
-
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
 
 ## Contributing
 
