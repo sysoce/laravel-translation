@@ -180,7 +180,7 @@ class TranslationTest extends TestCase
         $target_locale = 'ja';
 
         $source_translation = app(Model::class)->create(['locale' => $source_locale, 'text' => $text]);
-        $translation1 = $source_translation->translations()->create([
+        $old_translation = $source_translation->translations()->create([
             'locale' => $target_locale,
             'text' => $translation_text,
         ]);
@@ -188,10 +188,9 @@ class TranslationTest extends TestCase
         app(Translation::class)->setSource($source_locale);
         app(Translation::class)->setTarget($target_locale);
 
-        $translation2 = app(Translation::class)->setTranslation($text, $expected);         // set new translation
-        // $this->assertEquals($translation1->id, $translation2->id);
-        $this->assertTrue($translation1->is($translation2));
-        $this->assertEquals($expected, $translation2->text);
+        $new_translation = app(Translation::class)->setTranslation($text, $expected);         // set new translation
+        $this->assertFalse($old_translation->is($new_translation));
+        $this->assertEquals($expected, $new_translation->text);
     }
 
 }

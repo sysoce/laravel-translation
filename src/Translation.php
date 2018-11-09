@@ -105,6 +105,7 @@ class Translation
     public function setTranslation($text, $translation_text)
     {
         $source = Model::firstOrCreate(['locale' => $this->getSource(), 'text' => $text]);
+        $old_translation = $source->translations()->where('locale', $this->getTarget())->first();
         $translation = Model::updateOrCreate(
             [
                 'locale' => $this->getTarget(),
@@ -114,6 +115,10 @@ class Translation
                 'text' => $translation_text
             ]
         );
+        if($old_translation && $old_translation->id != $translation->id) {
+            $old_translation->source_id = null;
+            $old_translation->save();
+        }
         return $translation;
     }
 

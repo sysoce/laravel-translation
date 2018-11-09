@@ -49,14 +49,16 @@ trait HasHashIdTrait
     {
         $static = (new static);
 
-        if(empty($attributes['hash_id']) && !empty($attributes['locale']) && !empty($attributes['text'])) {
-            $attributes['hash_id'] = $static->hash($static->getHashableString($attributes));
+        if(empty($attributes['hash_id'])) {
+            $attributes['hash_id'] = $static->hash($static->getHashableString($attributes + $values));
         }
 
-        if (! is_null($instance = $static->where($attributes)->first())) {
+        if (! is_null($instance = $static->where('hash_id', $attributes['hash_id'])->first())) {
             return $instance;
         }
-        return $static->newModelInstance($attributes + $values);
+        $model = $static->newModelInstance($attributes + $values);
+        $model->save();
+        return $model;
     }
 
     /**
@@ -69,17 +71,22 @@ trait HasHashIdTrait
     public static function updateOrCreate(array $attributes, array $values = [])
     {
         $static = (new static);
-        if(empty($attributes['hash_id']) && !empty($attributes['locale']) && !empty($attributes['text'])) {
-            $attributes['hash_id'] = $static->hash($static->getHashableString($attributes));
+        if(empty($attributes['hash_id'])) {
+            $attributes['hash_id'] = $static->hash($static->getHashableString($attributes + $values));
         }
-
-        return tap($static->firstOrNew($attributes), function ($instance) use ($values) {
+        if (! is_null($instance = $static->where('hash_id', $attributes['hash_id'])->first())) {
             $instance->fill($values)->save();
-        });
+            return $instance;
+        } else {
+            $instance = $static->newModelInstance($attributes + $values);
+            $instance->save();
+        }
+        return $instance;
     }
 
     /**
      * Get a hashable string from a set of attributes.
+     * TODO: throw Exception if no hashableAttributes or empty
      *
      * @param  string  $string
      * @return string
@@ -87,10 +94,8 @@ trait HasHashIdTrait
     public function getHashableString($attributes)
     {
         $string = null;
-        if(!empty($this->hashableAttributes)) {
-            foreach ($this->hashableAttributes as $value) {
-                $string .= $attributes[$value];
-            }
+        foreach ($this->hashableAttributes as $value) {
+            $string .= $attributes[$value];
         }
         return $string;
     }
