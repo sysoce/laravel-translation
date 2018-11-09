@@ -15,7 +15,7 @@ class CreateTranslationsTable extends Migration
 	{
 		Schema::create('translations', function(Blueprint $table) {
 		    $table->increments('id');
-		    $table->char('hash_id', 32)->unique();
+		    $table->char('hash_id', 32);
 		    $table->integer('source_id')->unsigned()->nullable();
 		    $table->foreign('source_id')
 			  ->references('id')
@@ -26,6 +26,7 @@ class CreateTranslationsTable extends Migration
 		    $table->text('text');
 		    $table->timestamps();
 		    $table->softDeletes();
+		    $table->unique(['hash_id', 'source_id']);
 		});
 	}
 

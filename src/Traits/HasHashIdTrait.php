@@ -16,7 +16,7 @@ namespace Sysoce\Translation\Traits;
 trait HasHashIdTrait
 {
     /**
-     * Define which model attributes are hashable.
+     * Define which model attributes are hashable in the model Class.
      * If empty all model attributes will be hashed.
      *
      * @param array $hashableAttributes
@@ -25,16 +25,15 @@ trait HasHashIdTrait
 
     /**
      * Define model event callbacks.
+     * TODO: check if hashable attributes are set and either update the has or prevent update
      *
      * @return void
      */
     public static function bootHasHashIdTrait()
     {
-        $string = '';
         static::creating(function ($model) {
             $string = $model->getHashableString($model->attributes);
-            $hash = $model->hash($string);
-            $model->attributes['hash_id'] = $hash;
+            $model->attributes['hash_id'] = $model->hash($string);
         });
     }
 
@@ -48,17 +47,7 @@ trait HasHashIdTrait
     public static function firstOrCreate(array $attributes, array $values = [])
     {
         $static = (new static);
-
-        if(empty($attributes['hash_id'])) {
-            $attributes['hash_id'] = $static->hash($static->getHashableString($attributes + $values));
-        }
-
-        if (! is_null($instance = $static->where('hash_id', $attributes['hash_id'])->first())) {
-            return $instance;
-        }
-        $model = $static->newModelInstance($attributes + $values);
-        $model->save();
-        return $model;
+        return $static->callbackOrCreate($attributes, $values);
     }
 
     /**
@@ -71,31 +60,59 @@ trait HasHashIdTrait
     public static function updateOrCreate(array $attributes, array $values = [])
     {
         $static = (new static);
-        if(empty($attributes['hash_id'])) {
-            $attributes['hash_id'] = $static->hash($static->getHashableString($attributes + $values));
-        }
-        if (! is_null($instance = $static->where('hash_id', $attributes['hash_id'])->first())) {
+        return $static->callbackOrCreate($attributes, $values, function (& $instance) use ($values) {
             $instance->fill($values)->save();
-            return $instance;
+        });
+    }
+
+    /**
+     * Get the first record matching the attributes and callback or create it.
+     *
+     * @param  array  $attributes
+     * @param  array  $values
+     * @return \Illuminate\Database\Eloquent\Model
+     */
+    public static function callbackOrCreate(array $attributes, array $values = [], $callback = null)
+    {
+        $static = (new static);
+        $hashed_attr = $static->getHashedAttributes($attributes);
+        $instance = $static->where($hashed_attr)->first();
+        if(!is_null($instance)) {
+            if(is_callable($callback)) $callback($instance);
         } else {
-            $instance = $static->newModelInstance($attributes + $values);
+            $instance = $static->newModelInstance($attributes + $hashed_attr + $values);
             $instance->save();
         }
         return $instance;
     }
 
     /**
+     * If the attributes are hashed, returns the hashed attributes
+     *
+     * @param  array  $attributes
+     * @return string
+     */
+    public function getHashedAttributes($attributes)
+    {
+        $attributes['hash_id'] = $this->hash($this->getHashableString($attributes));
+        foreach ($this->hashableAttributes as $value) {
+            unset($attributes[$value]);
+        }
+        return $attributes;
+    }
+
+    /**
      * Get a hashable string from a set of attributes.
      * TODO: throw Exception if no hashableAttributes or empty
      *
-     * @param  string  $string
+     * @param  array  $attributes
      * @return string
      */
     public function getHashableString($attributes)
     {
         $string = null;
         foreach ($this->hashableAttributes as $value) {
-            $string .= $attributes[$value];
+            if(isset($attributes[$value])) $string .= $attributes[$value];
         }
         return $string;
     }

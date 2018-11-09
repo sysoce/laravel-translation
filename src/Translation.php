@@ -14,7 +14,6 @@
 namespace Sysoce\Translation;
 
 use Sysoce\Translation\Contracts\Client;
-// use Sysoce\Translation\Clients\GoogleCloudTranslate as Client;
 use Sysoce\Translation\Models\Translation as Model;
 
 class Translation
@@ -116,8 +115,14 @@ class Translation
             ]
         );
         if($old_translation && $old_translation->id != $translation->id) {
-            $old_translation->source_id = null;
-            $old_translation->save();
+            if($old_translation->translations()->first()) {
+                // if the old translation is a source for other translations unset its source
+                $old_translation->source_id = null;
+                $old_translation->save();
+            } else {
+                // otherwise just clean it up
+                $old_translation->delete();
+            }
         }
         return $translation;
     }
