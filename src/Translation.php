@@ -81,9 +81,7 @@ class Translation
                 $translation = Model::firstOrCreate(
                     [
                         'locale' => $this->getTarget(),
-                        'text' => $this->client->translate($text)
-                    ],
-                    [
+                        'text' => $this->client->translate($text),
                         'source_id' => $source->id
                     ]
                 );
@@ -105,13 +103,11 @@ class Translation
     {
         $source = Model::firstOrCreate(['locale' => $this->getSource(), 'text' => $text]);
         $old_translation = $source->translations()->where('locale', $this->getTarget())->first();
-        $translation = Model::updateOrCreate(
+        $translation = Model::firstOrCreate(
             [
                 'locale' => $this->getTarget(),
+                'text' => $translation_text,
                 'source_id' => $source->id
-            ],
-            [
-                'text' => $translation_text
             ]
         );
         if($old_translation && $old_translation->id != $translation->id) {

@@ -25,15 +25,14 @@ trait HasHashIdTrait
 
     /**
      * Define model event callbacks.
-     * TODO: check if hashable attributes are set and either update the has or prevent update
+     * TODO: check if hashable attributes are set and either update the hash or prevent update
      *
      * @return void
      */
     public static function bootHasHashIdTrait()
     {
         static::creating(function ($model) {
-            $string = $model->getHashableString($model->attributes);
-            $model->attributes['hash_id'] = $model->hash($string);
+            $model->attributes['hash_id'] = $model->generateHashId($model->attributes);
         });
     }
 
@@ -47,39 +46,9 @@ trait HasHashIdTrait
     public static function firstOrCreate(array $attributes, array $values = [])
     {
         $static = (new static);
-        return $static->callbackOrCreate($attributes, $values);
-    }
-
-    /**
-     * Get the first record matching the attributes or create it.
-     *
-     * @param  array  $attributes
-     * @param  array  $values
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public static function updateOrCreate(array $attributes, array $values = [])
-    {
-        $static = (new static);
-        return $static->callbackOrCreate($attributes, $values, function (& $instance) use ($values) {
-            $instance->fill($values)->save();
-        });
-    }
-
-    /**
-     * Get the first record matching the attributes and callback or create it.
-     *
-     * @param  array  $attributes
-     * @param  array  $values
-     * @return \Illuminate\Database\Eloquent\Model
-     */
-    public static function callbackOrCreate(array $attributes, array $values = [], $callback = null)
-    {
-        $static = (new static);
-        $hashed_attr = $static->getHashedAttributes($attributes);
+        $hashed_attr = $static->replaceHashableAttributes($attributes);
         $instance = $static->where($hashed_attr)->first();
-        if(!is_null($instance)) {
-            if(is_callable($callback)) $callback($instance);
-        } else {
+        if(is_null($instance)) {
             $instance = $static->newModelInstance($attributes + $hashed_attr + $values);
             $instance->save();
         }
@@ -87,32 +56,50 @@ trait HasHashIdTrait
     }
 
     /**
-     * If the attributes are hashed, returns the hashed attributes
+     * Returns an array of attributes where the hashable attributes are replaced by the hash_id
      *
      * @param  array  $attributes
-     * @return string
+     * @return array
      */
-    public function getHashedAttributes($attributes)
+    public function replaceHashableAttributes($attributes)
     {
-        $attributes['hash_id'] = $this->hash($this->getHashableString($attributes));
-        foreach ($this->hashableAttributes as $value) {
-            unset($attributes[$value]);
+        $hash_id = $this->generateHashId($attributes);
+        if($hash_id) {
+            $attributes['hash_id'] = $hash_id;
+            foreach ($this->hashableAttributes as $value) {
+                unset($attributes[$value]);
+            }
         }
         return $attributes;
     }
 
     /**
-     * Get a hashable string from a set of attributes.
-     * TODO: throw Exception if no hashableAttributes or empty
+     * Get a hash id string from the set of hashable attributes.
      *
      * @param  array  $attributes
-     * @return string
+     * @return string | null        returns null if attributes not hashable
+     */
+    public function generateHashId($attributes)
+    {
+        $hashable_string = $this->getHashableString($attributes);
+        if($hashable_string) return $this->hash($hashable_string);
+        return null;
+    }
+
+    /**
+     * Get a hashable string from the hashable attributes.
+     *
+     * @param  array  $attributes
+     * @return string | null        returns null if not hashableAttributes set or not all hashableAttributes provided
      */
     public function getHashableString($attributes)
     {
         $string = null;
-        foreach ($this->hashableAttributes as $value) {
-            if(isset($attributes[$value])) $string .= $attributes[$value];
+        if(!empty($this->hashableAttributes)) { // check if set
+            foreach ($this->hashableAttributes as $value) {
+                if(isset($attributes[$value])) $string .= $attributes[$value];
+                else return null;
+            }
         }
         return $string;
     }

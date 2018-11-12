@@ -56,41 +56,11 @@ class HasHashIdTest extends TestCase
     }
 
     /** @test */
-    public function it_creates_a_model_with_updateOrCreate_if_the_model_does_not_exist()
-    {
-        $test_data = [
-            'locale' => $this->faker->locale,
-            'text' => $this->faker->unique()->text
-        ];
-        $model = app(Model::class)->updateOrCreate($test_data);
-        $this->assertInstanceOf(Model::class, $model);
-    }
-
-    /** @test */
-    public function it_updates_a_model_with_updateOrCreate_if_the_model__exist()
-    {
-        $locale = $this->faker->locale;
-        $test_data = [
-            'locale' => $locale,
-            'text' => $this->faker->unique()->text
-        ];
-
-        $model1 = app(Model::class)->create($test_data);
-        $values = [
-            'text' => $this->faker->unique()->text
-        ];
-        $model2 = app(Model::class)->updateOrCreate($test_data, $values);
-
-        $this->assertTrue($model1->is($model2));
-        $this->assertEquals($model2->text, $values['text']);
-    }
-
-    /** @test */
     public function it_gets_hashable_string()
     {
         $data = [
             'locale' => $this->faker->locale,
-            'text' => $this->faker->unique()->locale
+            'text' => $this->faker->unique()->text
         ];
         $string = $this->model->getHashableString($data);
         // TODO: remove implementation specific
@@ -98,10 +68,52 @@ class HasHashIdTest extends TestCase
     }
 
     /** @test */
-    public function it_hashes()
+    public function it_hashes_with_md5()
     {
-        $hash1 = $this->model->hash($this->faker->unique()->text);
+        $string = 'testesthelloworld_md5hash';
+        $expected = 'a5df194176bd9d4d50c8c0067d7d89ed';
+
+        $hash1 = $this->model->hash($string);
+        $this->assertTrue($hash1 == $expected);
+
         $hash2 = $this->model->hash($this->faker->unique()->text);
-        $this->assertTrue($hash1 != $hash2);
+        $this->assertTrue($hash2 != $expected);
+    }
+
+    /** @test */
+    public function it_generates_hash_id()
+    {
+        $data1 = [
+            'locale' => 'en',
+            'text' => 'kebab'
+        ];
+        $expected = '59079dac7bf569beabc50d8ab8e3efcf';
+
+        $hash_id1 = $this->model->generateHashId($data1);
+        $this->assertTrue($hash_id1 == $expected);
+
+        $data2 = [
+            'locale' => $this->faker->locale,
+            'text' => $this->faker->unique()->text
+        ];
+        $hash_id2 = $this->model->generateHashId($data2);
+        $this->assertTrue($hash_id1 != $hash_id2);
+    }
+
+    /** @test */
+    public function it_replaces_hashable_attributes()
+    {
+        $data = [
+            'locale' => 'en',
+            'text' => 'kebab',
+            'source_id' => 123
+        ];
+        $expected = '59079dac7bf569beabc50d8ab8e3efcf';
+
+        $output = $this->model->replaceHashableAttributes($data);
+        $this->assertNotNull($output['hash_id']);
+        $this->assertTrue($output['hash_id'] == $expected);
+        $this->assertTrue($output['source_id'] == $data['source_id']);
+        $this->assertTrue(count($output) == 2);
     }
 }
